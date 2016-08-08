@@ -20,14 +20,16 @@ def login():
     return r
 
 
-disclaimer = '''
-*I am a bot. If you have any questions or concerns regarding the actions of this bot,
+disclaimer = '''\n\n
+*I am a bot. If you have any questions or concerns regarding the actions of this bot, or feel that this was done in error,
  [please message the moderators](https://www.reddit.com/message/compose?to=%2Fr%2Funknownvideos).
  If you would like a bot of your own, feel free to [message the creator of this bot](https://www.reddit.com/message/compose/?to=___NOT_A_BOT___)'''
-
+removal_message = 'This post has been deleted due to the fact that you have posted more than four comments this month from '
 sub = 'unknownvideos'
 usernames = ['example_username',
              ''] #List the moderators or people you would like to exempt from this bot. Include the bot's username and exclude the /u/
+mod = 'jontheboss'
+title ='Found a overposter'
 maxposts = 500
 url = ['https://www.youtube.com',
        'https://www.reddit.com']  #A list of sites that you use/allow on your sub. The ones here are just examples
@@ -38,15 +40,9 @@ cur = database.cursor()
 cur.execute('CREATE TABLE IF NOT EXISTS answered(id TEXT)')
 database.commit()
 
-def check_rules():
-    submissions = user.get_submitted(limit=20):
-        for submissions in submissions:
-           text = submission.url
-           for i in range(len(urls)):
-               if re.match(url[i], text):
 
 
-def search_posts(): #Searches for the posts on you sub
+def search_posts(): #Searches for the posts on your sub
     submissions = r.get_subreddit(sub).get_new(limit=maxposts)
     for submission in submissions:
         cur.execute('SELECT * FROM answered WHERE ID=?', [submission.id])
@@ -59,14 +55,20 @@ def search_posts(): #Searches for the posts on you sub
                     for i in range(len(urls)):
                         if re.match(url[i], submission_title) or re.match(url[i], submission_text):
                             user = r.get_user(author) #get's the user
-                            #check_rules() #If a post meets these criteria, then the bot will check the rules
+                            user_submissions = user.get_submitted(limit=10, sort=top, ).url
+                            for x in range(20):
+                                check = len(re.findall(url[x], user_submissions))
+                                if check > 4:
+                                    r.send_message(mod, title, '/u/'+author+' may be breaking the rules. I have deleted his/her more recent post. [You might want to check it out]('+submission)
+                                    submission.add_comment(removal_message + disclaimer)
+                                    submission.delete
                         else:
                             pass
-            except AttributeError: #Checks is post has been deleted and skips it if it has
+            except AttributeError: #Checks if post has been deleted and skips it if it has
                 pass
 
-load = 1
 r
+load = 1
 while True:
     search_posts()
     time.sleep(2) #You can only request every two seconds
