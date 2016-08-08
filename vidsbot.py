@@ -44,6 +44,7 @@ def check_rules():
            text = submission.title.lower()
            for i in range(len(urls)):
                if re.match(url[i], text):
+                   #This needs to be finished
 
 
 def search_posts(): #Searches for the posts on you sub
