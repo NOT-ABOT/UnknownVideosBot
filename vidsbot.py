@@ -41,26 +41,25 @@ database.commit()
 def check_rules():
     submissions = user.get_submitted(limit=20):
         for submissions in submissions:
-           text = submission.title.lower()
+           text = submission.url
            for i in range(len(urls)):
                if re.match(url[i], text):
-                   #This needs to be finished
 
 
 def search_posts(): #Searches for the posts on you sub
-    submissions = r.get_subreddit(sub).get_new(maxposts)
+    submissions = r.get_subreddit(sub).get_new(limit=maxposts)
     for submission in submissions:
         cur.execute('SELECT * FROM answered WHERE ID=?', [submission.id])
         if not cur.fetchone(): #Will only respond to
             try:
                 author = submission.author.name
                 if author != any(username in usernames): #Checks to make sure that it is not responding to a mod or itself
-                    submission_title = submission.title.lower()
+                    submission_title = submission.url
                     submission_text = submission.body.lower()
                     for i in range(len(urls)):
                         if re.match(url[i], submission_title) or re.match(url[i], submission_text):
                             user = r.get_user(author) #get's the user
-                            check_rules() #If a post meets these criteria, then the bot will check the rules
+                            #check_rules() #If a post meets these criteria, then the bot will check the rules
                         else:
                             pass
             except AttributeError: #Checks is post has been deleted and skips it if it has
