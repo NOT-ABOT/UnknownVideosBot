@@ -66,6 +66,7 @@ def search_posts(): #Searches for the posts on you sub
                 pass
 
 load = 1
+r
 while True:
     search_posts()
     time.sleep(2) #You can only request every two seconds
