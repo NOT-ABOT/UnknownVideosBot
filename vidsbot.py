@@ -39,7 +39,7 @@ cur.execute('CREATE TABLE IF NOT EXISTS answered(id TEXT)')
 database.commit()
 
 def check_rules():
-    submissions = user.get_submissions(limit=20):
+    submissions = user.get_submitted(limit=20):
         for submissions in submissions:
            text = submission.title.lower()
            for i in range(len(urls)):
