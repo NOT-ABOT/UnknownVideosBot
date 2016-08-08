@@ -5,14 +5,6 @@ import praw, time, sqlite3, re
 #This needs to be filled in on your own and should never be shown to anyone           #
 #######################################################################################
 
-user_agent = ''
-app_id = ''
-app_secret = ''
-app_uri = ''
-app_scopes = ''
-refresh_token = ''
-
-
 def login():
     r = praw.Reddit(user_agent)
     r.set_oauth_app_info(app_id, app_secret, app_uri)
@@ -35,7 +27,7 @@ url = ['https://www.youtube.com',
        'https://www.reddit.com']  #A list of sites that you use/allow on your sub. The ones here are just examples
 
 print('Retrieving Database...')
-database = sqlite3.connect('database.db'):
+database = sqlite3.connect('database.db')
 cur = database.cursor()
 cur.execute('CREATE TABLE IF NOT EXISTS answered(id TEXT)')
 database.commit()
