@@ -56,7 +56,7 @@ def search_posts():
                             database.commit()
                             user_submissions = r.get_redditor(author).get_submitted(limit=10)
                             for user_submission in user_submissions:
-                                if len(re.findall(urls[i], user_submission.url)) == 1:
+                                if len(re.findall(urls[i], user_submission.url)) > 1:
                                     r.send_message(mod, title, '/u/'+author+' may be breaking the rules. I have deleted his/her most recent post. [You might want to check it out]('+str(submission))
                                     r.send_message(author, 'Private Message', 'Between you and me, I disagree with what those evil humans made me do.') #This is just for fun
                                     print('Removing potential rulebreaker')
