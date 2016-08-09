@@ -5,14 +5,7 @@ import praw, time, sqlite3, re
 #This needs to be filled in on your own and should never be shown to anyone           #
 #######################################################################################
 
-user_agent = 'A moderator for r/UnknownVideos'
-app_id = 'Wqw0DjnjIXIyqw'
-app_secret = 'FlvpRFzrYrAXsPPGiL8wYc38C5w'
-app_uri = 'https://127.0.0.1:65010/authorize_callback'
-app_scopes = 'account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modothers modposts modself modwiki mysubreddits privatemessages read report save submit subscribe vote wikiedit wikiread'
-refresh_token = '60871428-5iKWjPSTs4V7YsEFPSt63clxhYw'
 
-print('Logging in to Reddit as /u/UnknownVideosMod...')
 
 def login():
     r = praw.Reddit(user_agent)
