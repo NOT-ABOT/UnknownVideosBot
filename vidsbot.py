@@ -1,6 +1,17 @@
 import praw, time, sqlite3, re
 
 
+#######################################################################################
+#This needs to be filled in on your own and should never be shown to anyone           #
+#######################################################################################
+
+user_agent = 'A moderator for r/UnknownVideos'
+app_id = 'Wqw0DjnjIXIyqw'
+app_secret = 'FlvpRFzrYrAXsPPGiL8wYc38C5w'
+app_uri = 'https://127.0.0.1:65010/authorize_callback'
+app_scopes = 'account creddits edit flair history identity livemanage modconfig modcontributors modflair modlog modothers modposts modself modwiki mysubreddits privatemessages read report save submit subscribe vote wikiedit wikiread'
+refresh_token = '60871428-5iKWjPSTs4V7YsEFPSt63clxhYw'
+
 print('Logging in to Reddit as /u/UnknownVideosMod...')
 
 def login():
@@ -12,7 +23,7 @@ r = login()
 r
 
 disclaimer = '''\n\n-----------------------------------------------------------------------------------------------------------\n\n
-*I am a bot. If you have any questions or concerns regarding the actions of this bot, or feel that this was done in error,
+*I am a bot, and this was done automatically. If you have any questions or concerns regarding the actions of this bot, or feel that this was done in error,
  [please message the moderators](https://www.reddit.com/message/compose?to=%2Fr%2Funknownvideos).
  If you would like a bot of your own, feel free to [message the creator of this bot](https://www.reddit.com/message/compose/?to=___NOT_A_BOT___)*'''
 removal_message = 'This post has been deleted due to the fact that you have posted more than once this week from this domain. Please post from a variety sources. Thanks!'
@@ -20,14 +31,14 @@ sub = 'unknownvideos_test'
 username = 'UnknownVideosMod'
 
 usernames = [
-             'UnknownVideosMod',
+             'unknownvideosmod',
              'jontheboss']
 
 mod = 'jontheboss'
 title ='Found a overposter'
 maxposts = 500
-urls = ['https://www.youtube.com',
-        'https://www/youtu.be.com',
+urls = ['https://www.youtube.com/user/(.*)',
+        'https://www/youtu.be.com/user/(.*)',
        'https://imgur.com',]
 
 print('Retrieving Database...')
@@ -47,11 +58,10 @@ def search_posts():
         if not cur.fetchone():
             author = submission.author.name.lower()
             for n in range(len(usernames)):
-                if not re.match(usernames[n].lower(), author):
+                if not re.match(usernames[n], author):
                     submission_url = submission.url
                     for i in range(len(urls)):
                         if re.match(urls[i], submission_url):
-                            print('Found it')
                             cur.execute('INSERT INTO answered VALUES(?)', [submission.id])
                             database.commit()
                             user_submissions = r.get_redditor(author).get_submitted(limit=10)
@@ -64,10 +74,11 @@ def search_posts():
                                     submission.remove()
 
 def send_message():
-    print('Message sent to /u/' + mod)
-    r.send_message(mod, 'Test', "Hey there, human", "Just checking to make sure I work" + disclaimer)
+    print('Message sent to /u/___NOT_A_BOT___')
+    r.send_message('___NOT_A_BOT___', 'I\'m running', 'I am being used right now.')
 
 send_message()
+
 
 load = 1
 while True:
