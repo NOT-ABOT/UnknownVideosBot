@@ -12,6 +12,7 @@ def login():
     r.set_oauth_app_info(app_id, app_secret, app_uri)
     r.refresh_access_information(refresh_token)
     return r
+    
 r = login()
 r
 
@@ -30,9 +31,9 @@ usernames = [
 
 mod = 'jontheboss'
 title ='Found a overposter'
-maxposts = 500
-urls = ['https://www.youtube.com/user/(.*)',
-        'https://www/youtu.be.com/user/(.*)',
+maxposts = 100
+urls = ['https://www.youtube.com',
+        'https://www/youtu.be.com',
        'https://imgur.com',]
 
 print('Retrieving Database...')
