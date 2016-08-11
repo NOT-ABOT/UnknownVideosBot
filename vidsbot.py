@@ -15,6 +15,7 @@ def login():
 r = login()
 r
 
+
 disclaimer = '''\n\n-----------------------------------------------------------------------------------------------------------\n\n
 *I am a bot, and this was done automatically. If you have any questions or concerns regarding the actions of this bot, or feel that this was done in error,
  [please message the moderators](https://www.reddit.com/message/compose?to=%2Fr%2Funknownvideos).
@@ -41,8 +42,11 @@ cur.execute('CREATE TABLE IF NOT EXISTS answered(id TEXT)')
 database.commit()
 
 
+def save():
+    cur.execute('INSERT INTO answered VALUES(?)', [submission.id])
+    database.commit()
 
-def search_posts():
+def get_submissions():
     submissions = r.get_subreddit(sub).get_new(limit=maxposts)
     for submission in submissions:
         if submission.author.name == None:
@@ -50,28 +54,32 @@ def search_posts():
         cur.execute('SELECT * FROM answered WHERE ID=?', [submission.id])
         if not cur.fetchone():
             author = submission.author.name.lower()
-            for n in range(len(usernames)):
-                if not re.match(usernames[n], author):
-                    submission_url = submission.url
-                    for i in range(len(urls)):
-                        if re.match(urls[i], submission_url):
-                            cur.execute('INSERT INTO answered VALUES(?)', [submission.id])
-                            database.commit()
-                            user_submissions = r.get_redditor(author).get_submitted(limit=10)
-                            for user_submission in user_submissions:
-                                if len(re.findall(urls[i], user_submission.url)) > 1:
-                                    r.send_message(mod, title, '/u/'+author+' may be breaking the rules. I have deleted his/her most recent post. [You might want to check it out]('+str(submission))
-                                    r.send_message(author, 'Private Message', 'Between you and me, I disagree with what those evil humans made me do.') #This is just for fun
-                                    print('Removing potential rulebreaker')
-                                    submission.add_comment(removal_message + disclaimer)
-                                    submission.remove()
 
-def send_message():
-    print('Message sent to /u/___NOT_A_BOT___')
-    r.send_message('___NOT_A_BOT___', 'I\'m running', 'I am being used right now.')
+def remove_post():
+    r.send_message(mod, title, '/u/'+author+' may be breaking the rules. I have deleted the submission, but you should still check it out.')
+    r.send_message(author, 'I\'m sorry', 'I disagree with what those evil humans made me do!')
+    submission.add_comment(removal_message + disclaimer)
+    submission.remove()
 
-send_message()
-
+def search_user():
+    user_submissions = r.get_redditor(author).get_submitted(limit=10)
+    for user_submission in user_submissions:
+        if len(re.findall(urls[i], user_submission.url)) > 1:
+            remove_post()
+            
+def check_for_mods():
+    for n in range(len(usernames)):
+        return False if not re.match(usernames[n], author)
+            
+            
+def search_posts():
+    get_submissions()
+    check_for_mods()
+    if check_for_mods == False:
+            for i in range(len(urls)):
+                if re.match(urls[i], submission.url):
+                    save()
+                    search_user()
 
 load = 1
 while True:
